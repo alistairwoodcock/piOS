@@ -1,0 +1,19 @@
+Learn later on:
+    o Learn about NEON registers
+    o Read more on linker
+    o Read more on Linux Kernel build process
+        https://github.com/torvalds/linux/blob/v4.14/Documentation/kbuild/makefiles.txt
+    o Read boot state expectations for ARM64 
+        https://github.com/torvalds/linux/blob/v4.14/Documentation/arm64/booting.txt
+    
+
+
+
+How things work:
+    - Raspberry Pi has it's own bootloader built into the device
+        we can configure the bootloader options with the config.txt file
+        that is at the top level of the SD card install
+
+        Most machines use a BIOS instead of a config.txt
+
+        https://www.raspberrypi.org/documentation/configuration/config-txt/
