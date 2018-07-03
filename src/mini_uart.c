@@ -43,10 +43,11 @@ void uart_init ( void )
     put32(GPFSEL1,selector);
 
     put32(GPPUD,0);
-    delay(150);
+    delay(200);
     put32(GPPUDCLK0,(1<<14)|(1<<15));
-    delay(150);
+    delay(200);
     put32(GPPUDCLK0,0);
+    delay(200);
 
     put32(AUX_ENABLES,1);                   //Enable mini uart (this also enables access to it registers)
     put32(AUX_MU_CNTL_REG,0);               //Disable auto flow control and disable receiver and transmitter (for now)

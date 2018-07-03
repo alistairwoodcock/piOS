@@ -5,7 +5,12 @@ Learn later on:
         https://github.com/torvalds/linux/blob/v4.14/Documentation/kbuild/makefiles.txt
     o Read boot state expectations for ARM64 
         https://github.com/torvalds/linux/blob/v4.14/Documentation/arm64/booting.txt
-    
+    o Read about chaches in arm 
+        https://developer.arm.com/products/architecture/a-profile/docs/den0024/latest/caches
+    o Read about multi core processors in arm
+        https://developer.arm.com/products/architecture/a-profile/docs/den0024/latest/multi-core-processors
+    o Read about Kernel Address Space Layour Randomization
+        https://lwn.net/Articles/569635/
 
 
 

@@ -1,42 +1,69 @@
 #include "mini_uart.h"
+#include "printf.h"
 #include "utils.h"
 
-// static unsigned long share = 0;
+static unsigned long share = 0;
+
+void read_data(){
+    printf("Ready to recevie...\r\n");
+
+
+    char n1 = uart_recv();
+    char n2 = uart_recv();
+    char n3 = uart_recv();
+    char n4 = uart_recv();
+
+    unsigned long data_len = n4 << 0 | n3 << 8 | n2 << 16 | n1 << 24;
+
+    printf("data_len: %u\r\n", data_len);
+
+    printf("Done receiving\r\n");
+}
+
+void next_core(){
+    share++;
+    if(share > 3) share = 0;
+}
 
 void kernel_main(unsigned long id)
 {
-    if(id == 0) uart_init();
-
     delay(1000000);
 
-    if(id == 0) uart_send_string("uart init\r\n\n");
-
-    uart_send_string("Hello, from processor ");
-    uart_send('0' + (unsigned char)id);
-    uart_send_string(".\r\n\n");
-
-    // share++;
-    
-    while (1){
-        // if(id == 0){
-        //     uart_send_string("id is zero\n");
-        //     delay(32000*8);
-        //     uart_send_string("S:");
-        //     uart_send(48 + share);
-        //     uart_send('\n');
-        // } else if(id == 1){
-        //     uart_send_string("id is one\n");
-        //     delay(32000*12);
-        // } else if(id == 2){
-        //     uart_send_string("id is two\n");
-        //     delay(32000*16);
-        // } else if(id == 3){
-        //     uart_send_string("id is three\n");
-        //     delay(32000*20);
-        // } else {
-        //     uart_send_string("id is something else?\n");
-        // }
-        
-        // uart_send_string("\n");
+    if(id == 0) {
+        uart_init();
+        printf_init(uart_send);
+        printf("uart init\r\n");
     }
+
+    while (1){
+        delay(1000000);
+
+        if(share == id){
+            printf("Hello, from processor %u.\r\n", id);
+
+            printf("Options:\r\n");
+            printf("(1) Read in data\r\n");
+            printf("(2) Next Core\r\n");
+            printf("(3) Exception Level\r\n");
+
+            char c = uart_recv();
+
+            switch(c)
+            {
+                case '1': read_data(); break;
+                case '2': next_core(); break;
+                case '3': {
+                    int el = get_el();
+                    printf("Exception level: %i \r\n", el);
+                } break;
+
+                default: printf("err: not a valid option\r\n"); break;
+            }
+        }
+    }
+}
+
+void kernel_exit(unsigned long id)
+{
+    printf("kernel %u exited.\r\n", id);
 }
