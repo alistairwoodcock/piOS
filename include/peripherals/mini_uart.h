@@ -3,6 +3,7 @@
 
 #include "peripherals/base.h"
 
+#define AUX_IRQ_PENDING_REG     (PBASE+0x00215000)
 #define AUX_ENABLES     (PBASE+0x00215004)
 #define AUX_MU_IO_REG   (PBASE+0x00215040)
 #define AUX_MU_IER_REG  (PBASE+0x00215044)
@@ -16,4 +17,8 @@
 #define AUX_MU_STAT_REG (PBASE+0x00215064)
 #define AUX_MU_BAUD_REG (PBASE+0x00215068)
 
+
+#define MU_RECV_PENDING         (2 << 1)
+#define MU_CLEAR_RECV           (1 << 1)
+#define MU_ENABLE_IRQ_RECV      (1 << 0)
 #endif  /*_P_MINI_UART_H */

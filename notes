@@ -11,7 +11,10 @@ Learn later on:
         https://developer.arm.com/products/architecture/a-profile/docs/den0024/latest/multi-core-processors
     o Read about Kernel Address Space Layour Randomization
         https://lwn.net/Articles/569635/
-
+    o Read about Virtually Mapped Kernel Stacks
+        https://lwn.net/Articles/692208/
+    o Read about how Linux wakes idle CPUs with tick broadcast
+        https://lwn.net/Articles/574962/
 
 
 How things work:

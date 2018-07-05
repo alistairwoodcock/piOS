@@ -28,6 +28,31 @@ void a_print_ul(unsigned long val){
     for(; i > 0; i /= 10) output_func('0' + (unsigned char) ((val%(i*10)) / i));
 }
 
+void a_print_string(char* str){
+    char* ch = str;
+    for(;*ch != '\0';ch++){
+        output_func(*ch);
+    }
+}
+
+void a_print_base_16(unsigned int val){
+    
+    int base = 16;
+    int n = 0;
+    unsigned int d = 1;
+    while (val/d >= base) d *= base;
+    
+    while (d!=0) {
+        int dgt = val / d;
+        val %= d;
+        d /= base;
+        if (n || dgt > 0 || d == 0) {
+            output_func(dgt + (dgt < 10 ? '0' : 'a' - 10));
+            ++n;
+        }
+    }   
+}
+
 void a_printf(char* fmt, ...){
     
     va_list args;
@@ -53,6 +78,16 @@ void a_printf(char* fmt, ...){
             case 'i': {
                 int val = va_arg(args, int);
                 a_print_int(val);
+            } break;
+
+            case 's': {
+                char* val = va_arg(args, char*);
+                a_print_string(val);
+            } break;
+
+            case 'x': {
+                unsigned int val = va_arg(args, unsigned int);
+                a_print_base_16(val);
             } break;
         }
     }    

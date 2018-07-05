@@ -1,0 +1,12 @@
+#ifndef _TIMER_H
+#define _TIMER_H
+
+void timer_init(void);
+void handle_timer_irq(void);
+
+void timer_arm_init(void);
+void handle_arm_timer_irq(void);
+
+
+
+#endif /* _TIMER_H */

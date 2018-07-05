@@ -1,8 +1,10 @@
 #include "mini_uart.h"
 #include "printf.h"
+#include "irq.h"
+#include "timer.h"
 #include "utils.h"
 
-static unsigned long share = 0;
+static unsigned long share = 1;
 
 void read_data(){
     printf("Ready to recevie...\r\n");
@@ -30,13 +32,22 @@ void kernel_main(unsigned long id)
     delay(1000000);
 
     if(id == 0) {
-        uart_init();
         printf_init(uart_send);
-        printf("uart init\r\n");
+        
+        uart_init();
+        irq_vector_init();
+        timer_init();
+        enable_interrupt_controller();
+        enable_irq();
+
+        char *s = "hello, world!";
+
+        printf("Init finished.\r\n%s\r\n", s);
     }
 
     while (1){
         delay(1000000);
+        continue;
 
         if(share == id){
             printf("Hello, from processor %u.\r\n", id);
