@@ -42,6 +42,8 @@ void a_print_base_16(unsigned int val){
     unsigned int d = 1;
     while (val/d >= base) d *= base;
     
+    a_print_string("0x");
+
     while (d!=0) {
         int dgt = val / d;
         val %= d;

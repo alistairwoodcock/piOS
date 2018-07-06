@@ -1,3 +1,27 @@
+Things I want to learn from this project:
+    
+    o How kernel starts up and gets running
+    o How user level applications are loaded into memory and run
+        o including how executable files are structured and loaded
+    o How you manage tasks and schedule them
+    o How cores communicate and share tasks
+    o How the kernel communicates between cores
+    o How virtual memory is implemented
+        o How address translation works
+    o How RAM is allocated and used
+        o Restricting user level code to their sections of memory
+    o How to read files from memory
+    o How to implement a filesystem structure
+    o How drivers are used in an operating system
+
+Features to consider this project complete:
+    o A running kernel with multiple cores
+    o Virtual memory
+    o File system access
+    o Scheduling tasks
+    o A simple shell for interfacing with the filesystem and launching programs
+
+
 Learn later on:
     o Learn about NEON registers
     o Read more on linker
@@ -25,3 +49,6 @@ How things work:
         Most machines use a BIOS instead of a config.txt
 
         https://www.raspberrypi.org/documentation/configuration/config-txt/
+
+
+    - Raspberry Pi is a system on a chip (SOC). This means that all of the peripherals are integrated into the chip, allowing you to access them by directly accessing reserved memory locations.

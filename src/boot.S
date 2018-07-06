@@ -74,5 +74,3 @@ run_kernel:
 proc_hang:
     b       proc_hang       // infinite loop town
 
-
-
