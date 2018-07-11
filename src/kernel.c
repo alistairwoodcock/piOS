@@ -5,15 +5,62 @@
 #include "utils.h"
 #include "fork.h"
 #include "sched.h"
+#include "sys.h"
 
-void process(int id)
+void user_process1(char* array)
 {
-    unsigned int sp = getsp();
-    printf("%x:entered process\r\n", sp);
+    if(array[0] == '1'){
+        printf("changing priority\r\n");
+        call_sys_priority(5);
+        printf("priority changed!!\r\n");
+    }
 
+    char buf[2] = {0};
     while(1){
-        delay(400000);
-        printf("process %i running\r\n", id);
+        for(int i = 0; i < 5; i++){
+            buf[0] = array[i];
+            call_sys_write(buf);
+            delay(100000);
+        }
+    }
+}
+
+void user_process(){
+    char* buf = "User process started\r\n";
+    call_sys_write(buf);
+
+    unsigned long stack = call_sys_malloc();
+    if(stack < 0){
+        printf("Error while allocating stack for process 1\r\n");
+        return;
+    }
+
+    int err = call_sys_clone((unsigned long)&user_process1, (unsigned long)"12345", stack);
+    if(err < 0){
+        printf("Error while cloning process 1\r\n");
+        return;
+    }
+
+    stack = call_sys_malloc();
+    if(stack < 0){
+        printf("Error while allocating stack for process 2\r\n");
+        return;
+    }
+
+    err = call_sys_clone((unsigned long)&user_process1, (unsigned long)"abcd", stack);
+    if(err < 0){
+        printf("Error while cloning process 2\r\n");
+        return;
+    }
+
+    call_sys_exit();
+}
+
+void kernel_process(){
+    printf("Kernel process started. EL %i\r\n", get_el());
+    int err = move_to_user_mode((unsigned long)&user_process);
+    if(err < 0){
+        printf("Error while moving process to user mode \r\n");
     }
 }
 
@@ -44,22 +91,21 @@ void kernel_main(unsigned long id)
     enable_interrupt_controller();
     enable_irq();
 
-    for(int i = 1; i < 5000; i++)
-    {
-        printf("creating process %i...\n", i);
-        int copied;
+    // for(int i = 1; i < 5000; i++)
+    // {
+    printf("creating process...\r\n");
+    int copied;
 
-        copied = copy_process((unsigned long)&process, (unsigned long)i);
-        
-        if (!copied) {
-            printf("error while starting process %i", i);
-            return;
-        }
-
-        printf("process %i created...\n", i);
-
-        delay(2500000);
+    copied = copy_process(PF_KTHREAD, (unsigned long)&kernel_process, 0, 0);
+    
+    if (!copied) {
+        printf("error while starting process");
+        return;
     }
+
+    delay(2500000);
+
+    // // }
 
     while (1){
         schedule();

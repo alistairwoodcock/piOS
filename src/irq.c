@@ -5,6 +5,7 @@
 #include "mini_uart.h"
 #include "peripherals/irq.h"
 #include "peripherals/mini_uart.h"
+#include "sched.h"
 
 const char *entry_error_messages[] = {
     "SYNC_INVALID_EL1t",
@@ -25,7 +26,10 @@ const char *entry_error_messages[] = {
     "SYNC_INVALID_EL0_32",      
     "IRQ_INVALID_EL0_32",       
     "FIQ_INVALID_EL0_32",       
-    "ERROR_INVALID_EL0_32"
+    "ERROR_INVALID_EL0_32",
+
+    "SYNC_ERROR",
+    "SYSCALL_ERROR"
 };
 
 void enable_interrupt_controller()
@@ -34,24 +38,22 @@ void enable_interrupt_controller()
     put32(ENABLE_IRQS_1, AUX_IRQ);
 }
 
+void show_data_abort_message(unsigned long esr, unsigned long address)
+{
+    printf("Data abort exception, ESR: %x, fault address: %x\r\n", esr, address);
+    printf("terminating process\r\n");
+    exit_process();
+}
+
 void show_invalid_entry_message(int type, unsigned long esr, unsigned long address)
 {
     printf("%s, ESR: %x, address: %x\r\n", entry_error_messages[type], esr, address);
+    printf("terminating process\r\n");
+    exit_process();
 }
 
 void handle_irq(void)
 {
-    // unsigned int irq_basic = get32(IRQ_BASIC_PENDING);
-    // switch(irq_basic)
-    // {
-    //     case (ARM_TIMER_IRQ): {
-    //         handle_arm_timer_irq();            
-    //     } break;
-
-    //     default:
-    //         printf("Unkown IRQ basic pending\n");
-    // }
-
     unsigned int irq = get32(IRQ_PENDING_1);
     switch(irq)
     {

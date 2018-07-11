@@ -31,5 +31,4 @@ void timer_arm_init(void)
 void handle_arm_timer_irq(void)
 {
     put32(A_TIMER_IRQ_CLEAR, A_TIMER_CLEAR_WRITE);
-    printf("Arm Timer interrupt received\n");
 }

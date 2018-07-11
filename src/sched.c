@@ -2,6 +2,8 @@
 #include "mm.h"
 #include "irq.h"
 #include "printf.h"
+#include "fork.h"
+#include "utils.h"
 
 
 static struct task_struct init_task = INIT_TASK;
@@ -34,7 +36,13 @@ int add_task(struct task_struct *new){
 
     printf("%i of %i tasks\r\n", nr_tasks, PAGE_SIZE / sizeof(struct task_struct*));
 
-    return 1;
+    return pid;
+}
+
+void change_priority(long priority){
+    if(priority <= 0) return;
+    
+    current->priority = priority;
 }
 
 void preempt_disable(void)
@@ -52,8 +60,6 @@ void _schedule(void)
     preempt_disable();
     int next,c;
     struct task_struct * p;
-
-    printf("number of tasks: %i\r\n", nr_tasks);
 
     while (1) {
         c = -1;
@@ -116,4 +122,21 @@ void timer_tick()
     enable_irq();
     _schedule();
     disable_irq();
+}
+
+void exit_process(){
+    preempt_disable();
+    for(int i = 0; i < nr_tasks; i++){
+        if(tasks[i] == current){
+            tasks[i]->state = TASK_ZOMBIE;
+            break;
+        }
+    }
+
+    if(current->stack){
+        free_page(current->stack);
+    }
+
+    preempt_enable();
+    schedule();
 }
