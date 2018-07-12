@@ -39,6 +39,8 @@ Learn later on:
         https://lwn.net/Articles/692208/
     o Read about how Linux wakes idle CPUs with tick broadcast
         https://lwn.net/Articles/574962/
+    o Read about Page Table Management in Linux
+        https://www.kernel.org/doc/gorman/html/understand/understand006.html
 
 
 How things work:

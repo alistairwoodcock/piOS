@@ -3,16 +3,13 @@
 
 #include "peripherals/base.h"
 
-#define T_BASE (PBASE+0x00003000)
-
-#define TIMER_CS    (T_BASE+0x00)
-#define TIMER_CLO   (T_BASE+0x04)
-#define TIMER_CHI   (T_BASE+0x08)
-#define TIMER_C0    (T_BASE+0x0C)
-#define TIMER_C1    (T_BASE+0x10)
-#define TIMER_C2    (T_BASE+0x14)
-#define TIMER_C3    (T_BASE+0x18)
-
+#define TIMER_CS        (PBASE+0x00003000)
+#define TIMER_CLO       (PBASE+0x00003004)
+#define TIMER_CHI       (PBASE+0x00003008)
+#define TIMER_C0        (PBASE+0x0000300C)
+#define TIMER_C1        (PBASE+0x00003010)
+#define TIMER_C2        (PBASE+0x00003014)
+#define TIMER_C3        (PBASE+0x00003018)
 
 #define TIMER_CS_M0 (1 << 0)
 #define TIMER_CS_M1 (1 << 1)

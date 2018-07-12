@@ -13,13 +13,13 @@ const char *entry_error_messages[] = {
     "FIQ_INVALID_EL1t",     
     "ERROR_INVALID_EL1T",       
 
-    "SYNC_INVALID_EL1h",        
-    "IRQ_INVALID_EL1h",     
+    "SYNC_INVALID_EL1h"
+    "IRQ_INVALID_EL1h",        
     "FIQ_INVALID_EL1h",     
     "ERROR_INVALID_EL1h",       
 
-    "SYNC_INVALID_EL0_64",      
-    "IRQ_INVALID_EL0_64",       
+    "SYNC_INVALID_EL0_64",
+    "IRQ_INVALID_EL0_64",
     "FIQ_INVALID_EL0_64",       
     "ERROR_INVALID_EL0_64", 
 
@@ -30,12 +30,13 @@ const char *entry_error_messages[] = {
 
     "SYNC_ERROR",
     "SYSCALL_ERROR"
+    "DATA_ABORT_ERROR"
 };
 
 void enable_interrupt_controller()
 {
     put32(ENABLE_IRQS_1, SYSTEM_TIMER_IRQ_1);
-    put32(ENABLE_IRQS_1, AUX_IRQ);
+    // put32(ENABLE_IRQS_1, AUX_IRQ);
 }
 
 void show_data_abort_message(unsigned long esr, unsigned long address)

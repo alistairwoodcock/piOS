@@ -99,7 +99,7 @@ vectors:
     ventry  fiq_invalid_el1t            // FIQ EL1t
     ventry  error_invalid_el1t          // Error EL1t
 
-    ventry  el1_sync                    // Synchronous EL1h
+    ventry  sync_invalid_el1h           // Synchronous EL1h
     ventry  el1_irq                     // IRQ EL1h
     ventry  fiq_invalid_el1h            // FIQ EL1h
     ventry  error_invalid_el1h          // Error EL1h
@@ -126,6 +126,9 @@ fiq_invalid_el1t:
 
 error_invalid_el1t:
     handle_invalid_entry 1, ERROR_INVALID_EL1t
+
+sync_invalid_el1h:
+    handle_invalid_entry 1, SYNC_INVALID_EL1h
 
 fiq_invalid_el1h:
     handle_invalid_entry 1, FIQ_INVALID_EL1h
@@ -156,18 +159,6 @@ el1_irq:
     bl      handle_irq
     kernel_exit 1
 
-el1_sync:
-    kernel_entry 1
-    mrs     x25, esr_el1
-    lsr     x24, x25, #ESR_ELx_EC_SHIFT
-    cmp     x24, #ESR_ELx_EC_DABT_CUR
-    b.eq    el1_da
-    handle_invalid_entry 0, SYNC_ERROR
-
-el1_da:
-    handle_data_abort 1
-    kernel_exit 1
-
 el0_irq:
     kernel_entry 0
     bl      handle_irq
@@ -179,7 +170,8 @@ el0_sync:
     lsr     x24, x25, #ESR_ELx_EC_SHIFT     //exception class
     cmp     x24, #ESR_ELx_EC_SVC64          //SVC in 64-bit state
     b.eq    el0_svc
-
+    cmp     x24, #ESR_ELx_EC_DABT_LOW  //data abort in EL0
+    b.eq    el0_da
     handle_invalid_entry 0, SYNC_ERROR
 
 sc_nr   .req    x25 //number of system calls
@@ -206,6 +198,17 @@ ret_from_syscall:
     str     x0, [sp, #S_X0] //returned x0
     kernel_exit 0
 
+el0_da:
+    bl      enable_irq
+    mrs     x0, far_el1
+    mrs     x1, esr_el1
+    bl      do_mem_abort
+    cmp     x0, 0
+    b.eq    1f
+    handle_invalid_entry 0, DATA_ABORT_ERROR
+1:
+    bl      disable_irq
+    kernel_exit 0
 
 .globl ret_from_fork
 ret_from_fork:

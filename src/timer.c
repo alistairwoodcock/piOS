@@ -4,7 +4,7 @@
 #include "peripherals/timer.h"
 #include "peripherals/arm_timer.h"
 
-const unsigned int interval = 400000;
+const unsigned int interval = 200000;
 unsigned int curVal = 0;
 
 void timer_init(void)
